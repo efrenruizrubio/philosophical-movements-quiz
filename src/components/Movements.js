@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 
 function Movements({ data, movements }) {
-  const [movementsData, setMovementsData] = useState(movements);
+  /* const [movementsData, setMovementsData] = useState(movements); */
   const [list, setList] = useState(data);
   const [dragging, setDragging] = useState(false);
   const dragItem = useRef();
