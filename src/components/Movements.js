@@ -1,7 +1,11 @@
 import React, { useState, useRef } from "react";
 
 function Movements({ data, movements }) {
+<<<<<<< HEAD
   /* const [movementsData, setMovementsData] = useState(movements); */
+=======
+  /*const [movementsData, setMovementsData] = useState(movements);*/
+>>>>>>> 181ae669526bf0a27ab0eb8a5dc5c18f4f655815
   const [list, setList] = useState(data);
   const [dragging, setDragging] = useState(false);
   const dragItem = useRef();
