@@ -1,11 +1,7 @@
 import React, { useState, useRef } from "react";
 
 function Movements({ data, movements }) {
-<<<<<<< HEAD
-  /* const [movementsData, setMovementsData] = useState(movements); */
-=======
-  /*const [movementsData, setMovementsData] = useState(movements);*/
->>>>>>> 181ae669526bf0a27ab0eb8a5dc5c18f4f655815
+  const [movementsData, setMovementsData] = useState(movements);
   const [list, setList] = useState(data);
   const [dragging, setDragging] = useState(false);
   const dragItem = useRef();
@@ -36,6 +32,26 @@ function Movements({ data, movements }) {
     }
   };
 
+  const handleDragEnterOnMovements = (e, params) => {
+    const currentItem = dragItem.current;
+    if (e.target !== dragNode.current) {
+      setMovementsData((oldMovements) => {
+        let newMovements = JSON.parse(JSON.stringify(oldMovements));
+        console.log(newMovements);
+        newMovements[params.movementI].items.splice(
+          params.itemI,
+          0,
+          newMovements[currentItem.movementI].items.splice(
+            currentItem.itemI,
+            1
+          )[0]
+        );
+        dragItem.current = params;
+        return newMovements;
+      });
+    }
+  };
+
   const handleDragEnd = () => {
     setDragging(false);
     dragNode.current.removeEventListener("dragend", handleDragEnd);
@@ -54,29 +70,63 @@ function Movements({ data, movements }) {
     return "dnd-item";
   };
 
+  const getStylesMovements = (params) => {
+    const currentItem = dragItem.current;
+    if (
+      currentItem.groupI === params.movementI &&
+      currentItem.itemI === params.itemMovementI
+    ) {
+      return "current movement-item";
+    }
+    return "movement-item";
+  };
+
   return (
     <>
       <div className="main-container">
         <span className="title">Corrientes filos&oacute;ficas</span>
         <section className="movements-container">
-          <div className="card">
-            <span>1</span>
-          </div>
-          <div className="card">
-            <span>2</span>
-          </div>
-          <div className="card">
-            <span>3</span>
-          </div>
-          <div className="card">
-            <span>4</span>
-          </div>
-          <div className="card">
-            <span>5</span>
-          </div>
-          <div className="card">
-            <span>6</span>
-          </div>
+          {movementsData.map((movement, movementI) => (
+            <div
+              key={movement.title}
+              className="card"
+              onDragEnter={
+                dragging && !movement.items.length
+                  ? (e) => {
+                      handleDragEnterOnMovements(e, { movementI, itemI: 0 });
+                    }
+                  : null
+              }
+            >
+              <span className="group-title">{movement.title}</span>
+              {movement.items.map((item, itemMovementI) => (
+                <div
+                  draggable
+                  onDragStart={(e) => {
+                    handleDragStart(e, { movementI, itemMovementI });
+                  }}
+                  onDragEnter={
+                    dragging
+                      ? (e) => {
+                          handleDragEnterOnMovements(e, {
+                            movementI,
+                            itemMovementI,
+                          });
+                        }
+                      : null
+                  }
+                  key={movement.title + itemMovementI}
+                  className={
+                    dragging
+                      ? getStylesMovements({ movementI, itemMovementI })
+                      : "movement-item"
+                  }
+                >
+                  {item}
+                </div>
+              ))}
+            </div>
+          ))}
         </section>
 
         <div className="drag-n-drop">
